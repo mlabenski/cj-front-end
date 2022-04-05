@@ -3,8 +3,9 @@
         <vue-good-table
         class="colorMe"
         :columns="columns"
-        :rows="juices"
+        :rows="getJuices"
         theme="nocturnal"
+        v-on:row-click="onCellClick"
         :pagination-options="{
             enabled: true,
             mode: 'records',
@@ -17,13 +18,14 @@
 <script>
 
 import { VueGoodTable } from 'vue-good-table-next';
+import { mapMutations } from 'vuex'
 export default {
   name: 'employee-table',
   components: {
       VueGoodTable
   },
   props: {
-    juices: Array,
+    getJuices: Array,
   },
   data() {
     return {
@@ -60,6 +62,7 @@ export default {
     }
   },
   methods: {
+      ...mapMutations(['SET_CURRENT_ID']),
       formatFn: function(value){
           if(value=='TRUE'){
               return 'yes'
@@ -68,6 +71,12 @@ export default {
               return 'no'
           }
       },
+  onCellClick(params) {
+      this.SET_CURRENT_ID(params.row.juiceID)
+
+  }
+
+
   }
 }
 </script>
