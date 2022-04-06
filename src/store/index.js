@@ -9,7 +9,14 @@ export default createStore({
             juices : [],
             currentID: null,
             brandInput: null,
-            flavorInput: null
+            flavorInput: null,
+            FREDERICK: null,
+            YORK: null,
+            LEMOYNE: null,
+            GETTYSBURG: null,
+            juiceID: null,
+            flavor: null,
+            brand: null
         }
     },
     getters: {
@@ -24,10 +31,10 @@ export default createStore({
             return brandNames.reduce(function(a,b){if(a.indexOf(b)<0)a.push(b);return a;},[]);
         },
         getJuiceByIndex(state) {
-            if(state.currentID){
                 let oneJuice = state.juices.find(o => o.juiceID === state.currentID)
                 console.log(oneJuice)
-                return oneJuice
+                if(oneJuice){
+                    return oneJuice
             }
             console.log('nothing to return because no juice is selected')
             return null
@@ -37,7 +44,7 @@ export default createStore({
         async fetchJuices({ commit }) {
             try {
                 console.log('do  ueven get here')
-                const data = await axios.get('data.json')
+                const data = await axios.get('http://192.168.1.206:5000/juices/test/piece')
                 console.log(data.data);
                 commit('SET_JUICES', data.data)
             }
@@ -59,6 +66,18 @@ export default createStore({
         },
         SET_CURRENT_ID(state, id) {
             state.currentID = id
+        },
+        SET_INDIVIDUALS(state) {
+            if(state.currentID){
+                var data = this.getJuiceByIndex(state.currentID)
+                state.FREDERICK = data.FREDERICK
+                state.YORK = data.YORK
+                state.GETTYSBURG = data.GETTYSBURG
+                state.LEMOYNE = data.LEMOYNE
+                state.brand = data.brand
+                state.flavor = data.flavor
+                state.juiceID = data.juiceID
+            }
         }
     }
 })

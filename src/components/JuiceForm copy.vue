@@ -4,7 +4,7 @@
     <h1 v-if="getCurrentSelectedJuice == null" style="text-align:center;">Add Juices</h1>
     <h1 v-if="getCurrentSelectedJuice !=null" style="text-align:center;">Edit Juice</h1>
     <h3 style="text-align:center; padding-top:15px;">1) Brand Name</h3>
-    <v-text-field v-if="getCurrentSelectedJuice"  :label="getCurrentSelectedJuice.brand" @input="updateBrand" style="color: white; width:100%; background-color: grey"></v-text-field>
+    <v-text-field v-if="getCurrentSelectedJuice" :value="getCurrentSelectedJuice.brand" :label="getCurrentSelectedJuice.brand" @input="updateBrand" style="color: black; width:100%; background-color: grey"></v-text-field>
     <vue3-simple-typeahead 
     v-if="getCurrentSelectedJuice==null"
     @input="updateBrand"
@@ -22,7 +22,7 @@
     </vue3-simple-typeahead>
     <h3 style="text-align:center; padding-top: 15px;">2) Flavor Name</h3>
     <v-text-field v-if="getCurrentSelectedJuice==null" :label="flavor" :value="flavor" @input="updateFlavor" style="color: black; width: 100%; background-color: grey"></v-text-field>
-    <v-text-field v-if="getCurrentSelectedJuice"  :label="getCurrentSelectedJuice.flavor" @input="updateFlavor" style="color: white; width: 100%; background-color: grey"></v-text-field>
+    <v-text-field v-if="getCurrentSelectedJuice" :value="getCurrentSelectedJuice.flavor" :label="getCurrentSelectedJuice.flavor" @input="updateFlavor" style="color: black; width: 100%; background-color: grey"></v-text-field>
     <h3 style="padding-top:15px; text-align:center;">3) Store Locations</h3>
         <v-container fluid>
       <v-row>
@@ -104,32 +104,12 @@
           ></v-checkbox>
         </v-col>
       </v-row>
-    </v-container>  
+    </v-container>        
     <v-btn
-    v-if="getCurrentSelectedJuice==null"
   color="grey"
   elevation="2"
   style="width: 100%; margin-top: 15px; "
->Add Juice</v-btn>      
-    <v-btn
-    v-if="getCurrentSelectedJuice!=null"
-  color="grey"
-  @click="goBack()"
-  elevation="2"
-  style="width: 32%; margin-top: 15px; margin-right:1.3%"
->Go Back</v-btn>
-    <v-btn
-    v-if="getCurrentSelectedJuice!=null"
-  elevation="2"
-  color="error"
-  style="width: 32%; margin-top: 15px; margin-right:1.333%"
->Delete Juice</v-btn>
-    <v-btn
-    v-if="getCurrentSelectedJuice!=null"
-  color="success"
-  elevation="2"
-  style="width: 33.333%; margin-top: 15px; "
->Update Juice</v-btn>
+>Submit Changes</v-btn>
   </form>
 </template>
 
@@ -151,28 +131,22 @@ export default {
       selectedBrand: '',
       selectedFlavor: '',
       setFlavor: '',
-      setBrand: '',
-      brandInfo: '',
-      flavorInfo: ''
+      setBrand: ''
     }
   },
   methods: {
     updateBrand (e) {
-      this.brandInfo = e.target.value;
-      console.log(this.brandInfo)
+    this.$store.commit('SET_BRAND_INPUT', e.target.value)
     },
     updateFlavor (e) {
-      this.flavorInfo = e.target.value;
-    },
-    goBack() {
-      this.$store.commit('SET_CURRENT_ID', null)
+      this.$store.commit('SET_FLAVOR_INPUT', e.target.value)
     }
   },
   computed: {
     ...mapGetters(['getJuiceByIndex']),
       ...mapState({
     brand: state => state.brandInput,
-    flavor: state => state.flavorInput,
+    flavor: state => state.flavorInput
   }),
       removeKey: function() {
           var brands = [];
@@ -185,7 +159,7 @@ export default {
       getCurrentSelectedJuice: function() {
         var juice = this.getJuiceByIndex
         if(juice){
-          console.log(juice)
+          console.log('inside the if loop and it seems like '+juice)
           return juice
         }
         return null
